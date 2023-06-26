@@ -35,14 +35,21 @@ function productReducer(state={product:{loading:false, products:[], error:''}}, 
 //***Combine the reducers***/
 const rootReducer = combineReducers({counter1: counterReducer1, product: productReducer})
 
+//***Logger Middlewire***/
+const loggerMiddleware = (store) => (next) => (action) => {
+  console.log("action===", action);
+  next(action);
+};
+
 //***Creating store ***/
-let store = createStore(rootReducer, {counter1:{value:0}, product:{products:[], loading: true, error: ''}}, applyMiddleware(thunk))
+let store = createStore(rootReducer, {counter1:{value:0}, product:{products:[], loading: true, error: ''}}, applyMiddleware(thunk, loggerMiddleware))
 
 //***Subscribe the store to get update on the ui when the store get updated ***/
 store.subscribe(() =>{
     count.innerText = store.getState().counter1.value
-    console.log(store.getState())
+    console.log('Store===', store.getState())
 })
+
 
 
 const fetchData = ()=>{
